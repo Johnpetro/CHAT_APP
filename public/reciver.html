@@ -1,0 +1,215 @@
+<!-- receiver.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiver</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Receiver</h1>
+    <ul id="messages"></ul>
+
+    <script>
+        // Connect to the server
+        const socket = io();
+
+        // Listen for incoming messages
+        const messages = document.getElementById('messages');
+
+        socket.on('chat message', (msg) => {
+            const messageItem = document.createElement('li');
+            messageItem.textContent = msg; // Display the message
+            messages.appendChild(messageItem);
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- receiver.html -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiver (Chat App)</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Chat App</h1>
+    <div style="border: 1px solid #ccc; padding: 10px; max-width: 400px;">
+        <h3>Messages:</h3>
+        <ul id="messages" style="list-style-type: none; padding: 0;"></ul>
+        <hr>
+        <input id="messageInput" type="text" placeholder="Type your message here" style="width: 70%;">
+        <button id="sendButton">Send</button>
+    </div>
+
+    <script>
+        // Connect to the server
+        const socket = io();
+
+        // Reference elements
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Listen for incoming messages
+        socket.on('chat message', (msg) => {
+            const messageItem = document.createElement('li');
+            messageItem.textContent = msg; // Display the received message
+            messages.appendChild(messageItem);
+        });
+
+        // Send a message when the button is clicked
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message) {
+                socket.emit('chat message', message); // Send the message to the server
+                messageInput.value = ''; // Clear the input field
+            }
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- alice.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alice's Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .chat-container {
+            width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .messages li {
+            list-style: none;
+            margin-bottom: 10px;
+            max-width: 70%;
+            word-wrap: break-word;
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+        .messages .sent {
+            background-color: #d1e7dd;
+            margin-left: auto;
+            text-align: right;
+        }
+        .messages .received {
+            background-color: #f8d7da;
+            margin-right: auto;
+            text-align: left;
+        }
+        .input-container {
+            display: flex;
+            gap: 5px;
+        }
+        .input-container input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .input-container button {
+            padding: 8px 16px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .input-container button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h3>Alice's Chat</h3>
+        <ul id="messages" class="messages"></ul>
+        <div class="input-container">
+            <input id="messageInput" type="text" placeholder="Type your message">
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Send message from Alice
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message) {
+                appendMessage(message, 'sent'); // Show on Alice's right side
+                socket.emit('chat message', { sender: 'Alice', message }); // Send to server
+                messageInput.value = ''; // Clear input
+            }
+        });
+
+        // Receive message
+        socket.on('chat message', (data) => {
+            if (data.sender !== 'Alice') {
+                appendMessage(data.message, 'received'); // Show Bob's message on left side
+            }
+        });
+
+        // Append message to chat
+        function appendMessage(message, type) {
+            const messageItem = document.createElement('li');
+            messageItem.textContent = message;
+            messageItem.classList.add(type);
+            messages.appendChild(messageItem);
+
+            messages.scrollTop = messages.scrollHeight; // Scroll to latest message
+        }
+    </script>
+</body>
+</html>
+
